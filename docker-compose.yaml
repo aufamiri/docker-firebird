@@ -1,0 +1,42 @@
+version: '3'
+
+services: 
+
+  #PHP Services
+  web-app:
+    container_name: web-app
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: chillytaka/php7.4-firebird
+    tty: true
+    ports:
+      - "8080:80"
+    working_dir: /var/www/html
+    volumes:
+      - ./app:/var/www/html/
+    networks: 
+      - app-network
+
+  #Firebird DB Services
+  web-db:
+    container_name: web-db
+    image: jacobalberty/firebird:v3.0
+    tty: true
+    ports: 
+      - "30500:3050"
+    environment: 
+      ISC_PASSWORD: Ir1m4.80O2
+      FIREBIRD_DATABASE: web
+      FIREBIRD_USER: admin
+      FIREBIRD_PASSWORD: 123456
+      EnableWireCrypt: 1
+    volumes: 
+      - ./database:/firebird/data
+    networks: 
+      - app-network
+
+
+networks: 
+  app-network:
+    driver: bridge
