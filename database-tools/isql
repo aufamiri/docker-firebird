@@ -1,0 +1,16 @@
+#! /bin/bash
+
+# Checking Command Availability
+if ! command -v jq &> /dev/null
+then
+  echo "jq not found, please install it first at : https://stedolan.github.io/jq/download/"
+  exit
+elif ! command -v jq &> /dev/null
+then
+  echo "yq not found, try to installing..."
+  pip install yq
+fi
+
+imagename=$(yq -r .services.web_db.container_name ../docker-compose.yaml)
+
+docker exec -it $imagename /usr/local/firebird/bin/isql $@
